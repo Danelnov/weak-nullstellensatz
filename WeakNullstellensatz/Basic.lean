@@ -16,7 +16,7 @@ def ideal_U (A : Finset R) : Ideal (MvPolynomial σ R) :=
   Ideal.span (Set.range (λ i => u_poly i A))
 
 lemma eval_u_poly {i : σ} {A : Finset R} (x : σ → R)
-    (hxA : ∀ (i : σ), x i ∈ A) : (eval x) (u_poly i A) = 0 := by
+    (hxA : ∀ (i : σ), x i ∈ A) : (u_poly i A).eval x = 0 := by
   rw [u_poly]
   simp
   have ⟨a, ain, hx⟩: ∃ a ∈ A, x i = a := by aesop
@@ -70,7 +70,7 @@ def zeroLocusACompl : Set (σ → K) :=
   {x : σ → K | ∀ i, x i ∈ A} \ (zeroLocusA A I)
 
 
-lemma zeroLocusACompl_mem
+lemma zeroLocusAcompl_mem {A I}
     (x : σ → K) (S : Finset (MvPolynomial σ K)) (hI : I = Ideal.span S) :
     x ∈ zeroLocusACompl A I → ∃ p ∈ S, p.eval x ≠ 0 := by
   intro hx
@@ -83,8 +83,7 @@ lemma zeroLocusACompl_mem
   | add p₁ p₂ _ _ ih₁ ih₂ =>
     simp at hgx
     by_cases h : (p₁.eval x) = 0
-    . simp [h] at hgx
-      exact ih₂ hgx
+    . simp [h] at hgx; exact ih₂ hgx
     . exact ih₁ h
   | smul p₁ p₂ _ ih =>
     by_cases h : (p₂.eval x) = 0
