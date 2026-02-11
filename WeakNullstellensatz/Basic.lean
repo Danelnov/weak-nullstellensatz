@@ -120,7 +120,7 @@ noncomputable def vanishingPolyAux
     (jb - C (jb.eval b))
 
 
-example [Fintype σ] [Fintype K] (A : Finset K) (I : Ideal (MvPolynomial σ K)) :
+example [Fintype K] (A : Finset K) (I : Ideal (MvPolynomial σ K)) :
     vanishingIdeal K (SetLike.coe $ zeroLocus_on A I) = I + ideal_U A := by
   ext p
   simp [zeroLocus_on, Submodule.mem_sup]
