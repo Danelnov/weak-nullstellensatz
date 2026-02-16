@@ -59,6 +59,7 @@ theorem mem_ideal_U_iff [Fintype σ] [IsDomain R]
       exact h2.symm
 
 
+
 end UPoly
 
 
@@ -73,10 +74,10 @@ noncomputable def zeroLocus_on : Finset (σ → K) :=
   {x ∈ Fintype.piFinset fun _ : σ => A | x ∈ zeroLocus K I}
 
 
-
 @[simp]
 noncomputable def zeroLocus_on_compl : Finset (σ → K) :=
   {x ∈ Fintype.piFinset fun _ : σ => A | x ∉ zeroLocus K I}
+
 
 public noncomputable section vanishingPoly
 
@@ -114,27 +115,36 @@ def selector_j
   (hx : x ∈ zeroLocus_on_compl A I) : MvPolynomial σ K :=
   Classical.choose (zeroLocus_on_compl_mem S hI x hx)
 
+variable (A) in
 /--
 A polynomial constructed to vanish on all points of `zeroLocus_on_compl A I`.
 -/
-def vanishingPolyAux
-    (A : Finset K) : MvPolynomial σ K :=
+def vanishingPolyAux : MvPolynomial σ K :=
   ∏ b ∈ (zeroLocus_on_compl A I).attach,
     let jb := selector_j S hI b b.prop
     (jb - C (jb.eval b))
 
-def vanishing_const (A : Finset K) : K :=
+
+lemma vanishingPolyAux_vanishes_on_compl {x : σ → K} (hx : x ∉ zeroLocus_on A I) :
+    (vanishingPolyAux A S hI).eval x = 0 := by
+  simp at hx
+  sorry
+
+
+variable (A) in
+def vanishing_const : K :=
   ∏ b ∈ (zeroLocus_on_compl A I).attach, - (selector_j S hI b b.prop).eval b
 
-lemma vanishing_const_nonzero : vanishing_const S hI A ≠ 0 := by
+lemma vanishing_const_nonzero : vanishing_const A S hI ≠ 0 := by
   rw [vanishing_const, Finset.prod_ne_zero_iff]
   intro b _
   have ⟨_, hchoose⟩ := Classical.choose_spec (zeroLocus_on_compl_mem S hI b b.prop)
   simp only [ne_eq, neg_ne_zero, selector_j] at hchoose ⊢
   exact hchoose
 
-lemma vanishingPolyAux_eq_const_add_mem (A : Finset K) :
-    ∃ h ∈ I, (vanishingPolyAux S hI A) = C (vanishing_const S hI A) + h := by
+variable (A) in
+lemma vanishingPolyAux_eq_const_add_mem :
+    ∃ h ∈ I, (vanishingPolyAux A S hI) = C (vanishing_const A S hI) + h := by
   rw [vanishing_const, vanishingPolyAux]
   induction (zeroLocus_on_compl A I).attach using Finset.induction_on with
   | empty => simp
@@ -166,15 +176,46 @@ lemma vanishingPolyAux_eq_const_add_mem (A : Finset K) :
     . rw [Finset.prod_insert ha, ih, Finset.prod_insert ha]
       grind
 
+variable (A) in
+lemma eq_mul_vanishingPolyAux_add_mem (p : MvPolynomial σ K) :
+    ∃ c : K, ∃ h ∈ I, p = p * (vanishingPolyAux A S hI) * C c + h := by
+  have ⟨g, g_mem, hg⟩:= vanishingPolyAux_eq_const_add_mem A S hI
+  let c := (vanishing_const A S hI)⁻¹
+  use c
+  use - p * g * C c
+  constructor
+  . apply Ideal.mul_mem_right
+    apply Ideal.mul_mem_left
+    exact g_mem
+  . simp [hg, c]
+    ring_nf
+    simp [mul_assoc, ← C_mul, vanishing_const_nonzero]
+
 end vanishingPoly
 
-theorem vanishingIdeal_zeroLocus_eq_ideal_sum [Fintype K] (A : Finset K) (I : Ideal (MvPolynomial σ K)) :
+
+theorem vanishingIdeal_zeroLocus_eq_ideal_sum (A : Finset K) (I : Ideal (MvPolynomial σ K)) :
     vanishingIdeal K (SetLike.coe $ zeroLocus_on A I) = I + ideal_U A := by
   ext p
   simp [zeroLocus_on, Submodule.mem_sup]
   constructor <;> intro hp
   . have ⟨S, hI⟩ := Ideal.fg_of_isNoetherianRing I
-    sorry
+    have ⟨c, g, g_mem, hg⟩ := eq_mul_vanishingPolyAux_add_mem A S hI.symm p
+    use g, g_mem
+    use p * (vanishingPolyAux A S hI.symm) * C c
+    constructor
+    . apply Ideal.mul_mem_right
+      rw [mem_ideal_U_iff]
+      intro x hx
+      rw [eval_mul]
+      by_cases hx' : x ∈ (zeroLocus_on A I)
+      . simp at hx'
+        have ⟨_, hxI⟩ := hx'
+        specialize hp x hx hxI
+        simp [hp]
+      . have := vanishingPolyAux_vanishes_on_compl S hI.symm hx'
+        simp [this]
+    . grind
   . intro x hx
     -- Let p = f + g, where f ∈ I and g ∈ ideal_U A
     obtain ⟨f, hf, g, hg, hp⟩ := hp
