@@ -76,7 +76,6 @@ def vanishingPolyAux : MvPolynomial σ K :=
 
 lemma vanishingPolyAux_eval_eq_zero {x : σ → K} (xin : x ∈ zeroLocus_on_compl A I) :
     (vanishingPolyAux A S hI).eval x = 0 := by
-
   rw [vanishingPolyAux, eval_prod]
   refine Finset.prod_eq_zero (i := ⟨x, xin⟩) ?_ ?_
   · simp

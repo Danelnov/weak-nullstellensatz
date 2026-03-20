@@ -1,4 +1,4 @@
-# Weak Nullstellensatz for Finite Fields
+# Weak Nullstellensatz
 
 This project formalizes key results from **"On polynomial semantics for propositional logics"** by Juan C. Agudelo-Agudelo. Our main focus is the formalization of **Theorem 4: The Nullstellensatz for finite fields** in Lean using Mathlib.
 
@@ -93,11 +93,11 @@ I(B) = \{p \in R[X_1, \dots, X_n] \mid \forall \mathbf{a} \in B, p(\mathbf{a}) =
 
 > _**Note:**_ This is exactly the definition [MvPolynomial.vanishingIdeal](https://leanprover-community.github.io/mathlib4_docs/Mathlib/RingTheory/Nullstellensatz.html#MvPolynomial.vanishingIdeal).
 
-### Theorem 4: Weak Nullstellensatz for Finite Fields
+### Theorem 4: Weak Nullstellensatz
 
 The main objective of this repository is the formalization of the following result, which connects the algebraic and geometric perspectives over finite fields.
 
-**Theorem:** Let $K$ be a finite field, $A \subseteq K$ a finite subset, and $J \subseteq K[X_1, \dots, X_n]$ an ideal. Then:
+**Theorem:** Let $K$ be a field, $A \subseteq K$ a finite subset, and $J \subseteq K[X_1, \dots, X_n]$ an ideal. Then:
 
 ```math
 I(V^A(J)) = J + I(A^n)
