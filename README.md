@@ -1,4 +1,4 @@
-# Weak Nullstellensatz
+# Finitesatz
 
 This project formalizes key results from **"On polynomial semantics for propositional logics"** by Juan C. Agudelo-Agudelo. Our main focus is the formalization of **Theorem 4: The Nullstellensatz for finite fields** in Lean using Mathlib.
 
@@ -73,13 +73,13 @@ This section outlines the main theoretical result formalized in this repository.
 
 ### Definitions
 
-Let $R$ be a commutative ring and $A \subseteq R$ a subset. We consider the polynomial ring in $n$ variables, denoted as $R[X_1, \dots, X_n]$.
+Let $R$ be a commutative ring. We consider the polynomial ring in $n$ variables, denoted as $R[X_1, \dots, X_n]$.
 
 **Restricted Variety ($V^A$):**
-Given an ideal $J \subseteq R[X_1, \dots, X_n]$, the variety defined by $J$ restricted to $A$ is the set of common zeros within $A^n$:
+Given an ideal $J \subseteq R[X_1, \dots, X_n]$, the variety defined by $J$ restricted to $A = A_1 \times \cdots \times A_n$, where each is a finset of $R$, is the set of common zeros within $A$:
 
 ```math
-V^A(J) = \{(a_1, \dots, a_n) \in A^n \mid \forall p \in J, p(a_1, \dots, a_n) = 0\}
+V^A(J) = \{(a_1, \dots, a_n) \in A \mid \forall p \in J, p(a_1, \dots, a_n) = 0\}
 ```
 
 > _**Note:**_ A similar definition can be found in [MvPolynomial.zeroLocus](https://leanprover-community.github.io/mathlib4_docs/Mathlib/RingTheory/Nullstellensatz.html#MvPolynomial.zeroLocus).
@@ -97,8 +97,13 @@ I(B) = \{p \in R[X_1, \dots, X_n] \mid \forall \mathbf{a} \in B, p(\mathbf{a}) =
 
 The main objective of this repository is the formalization of the following result, which connects the algebraic and geometric perspectives over finite fields.
 
-**Theorem:** Let $K$ be a field, $A \subseteq K$ a finite subset, and $J \subseteq K[X_1, \dots, X_n]$ an ideal. Then:
+**Theorem:** Let $K$ be a field, $A \subseteq K^n$ a finite subset, and $J \subseteq K[X_1, \dots, X_n]$ an ideal. Then:
 
 ```math
-I(V^A(J)) = J + I(A^n)
+I(V^A(J)) = J + I(A)
 ```
+
+## References
+
+- Agudelo-Agudelo, J. C., Agudelo-González, C. A., & García-Quintero, O. E. (2016). On polynomial semantics for propositional logics. Journal of Applied Non-Classical Logics, 26(2), 103–125. [https://doi.org/10.1080/11663081.2016.1198529](https://doi.org/10.1080/11663081.2016.1198529)
+- Clark, P. L. (2014). The Combinatorial Nullstellensätze Revisited. The Electronic Journal of Combinatorics, 21(4), P4.15. [https://doi.org/10.37236/4359](https://doi.org/10.37236/4359)
