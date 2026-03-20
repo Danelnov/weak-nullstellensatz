@@ -10,23 +10,19 @@ open Classical
 
 
 variable {K σ : Type*} [Field K]  [Fintype σ]
-variable (A : Finset K) (I : Ideal (MvPolynomial σ K))
+variable (A : σ → Finset K) (I : Ideal (MvPolynomial σ K))
 
 /--
 This defines the variety V^A(I) = {x ∈ A^n | p(x) = 0, ∀p ∈ I}.
 -/
 @[simp]
 noncomputable def zeroLocus_on : Finset (σ → K) :=
-  {x ∈ Fintype.piFinset fun _ : σ => A | x ∈ zeroLocus K I}
+  {x ∈ Fintype.piFinset fun i : σ => A i | x ∈ zeroLocus K I}
 
 
 @[simp]
 noncomputable def zeroLocus_on_compl : Finset (σ → K) :=
-  {x ∈ Fintype.piFinset fun _ : σ => A | x ∉ zeroLocus K I}
-
-
-example {x : σ → K} (hx : ∀ i, x i ∈ A) (xnin : x ∉ zeroLocus K I) : x ∈ zeroLocus_on_compl A I := by
-  simp_all
+  {x ∈ Fintype.piFinset fun i : σ => A i | x ∉ zeroLocus K I}
 
 public noncomputable section vanishingPoly
 
@@ -144,8 +140,8 @@ lemma eq_mul_vanishingPolyAux_add_mem (p : MvPolynomial σ K) :
 end vanishingPoly
 
 
-theorem vanishingIdeal_zeroLocus_eq_ideal_sum (A : Finset K) (I : Ideal (MvPolynomial σ K)) :
-    vanishingIdeal K (SetLike.coe $ zeroLocus_on A I) = I + vanishingIdeal K {x | ∀ i, x i ∈ A} := by
+theorem vanishingIdeal_zeroLocus_eq_ideal_sum (A : σ → Finset K) (I : Ideal (MvPolynomial σ K)) :
+    vanishingIdeal K (SetLike.coe $ zeroLocus_on A I) = I + vanishingIdeal K {x | ∀ i, x i ∈ A i} := by
   ext p
   simp [zeroLocus_on, Submodule.mem_sup]
   constructor <;> intro hp
