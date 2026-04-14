@@ -72,10 +72,9 @@ def vanishingPolyAux : MvPolynomial σ K :=
 
 lemma vanishingPolyAux_eval_eq_zero {x : σ → K} (xin : x ∈ zeroLocus_on_compl A I) :
     (vanishingPolyAux A S hI).eval x = 0 := by
-  rw [vanishingPolyAux, eval_prod]
-  refine Finset.prod_eq_zero (i := ⟨x, xin⟩) ?_ ?_
-  · simp
-  · simp
+  rw [vanishingPolyAux, eval_prod, Finset.prod_eq_zero_iff]
+  refine ⟨⟨x, xin⟩, Finset.mem_attach _ _, ?_⟩
+  simp
 
 variable (A) in
 def vanishing_const : K :=
@@ -93,7 +92,10 @@ lemma vanishingPolyAux_eq_const_add_mem :
     ∃ h ∈ I, (vanishingPolyAux A S hI) = C (vanishing_const A S hI) + h := by
   rw [vanishing_const, vanishingPolyAux]
   induction (zeroLocus_on_compl A I).attach using Finset.induction_on with
-  | empty => simp
+  | empty =>
+    refine ⟨0, Ideal.zero_mem I, ?_⟩
+    rw [Finset.prod_empty, Finset.prod_empty]
+    simp
   | insert a B ha ih =>
     -- Let a ∈ zeroLocus_on_compl A I
     -- Let B ⊆ zeroLocus_on_compl A I, such that a ∉ B
