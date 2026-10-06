@@ -1,5 +1,3 @@
-import Mathlib.Algebra.MvPolynomial.Basic
-import Mathlib.Combinatorics.Nullstellensatz
 import Mathlib.RingTheory.Nullstellensatz
 import Mathlib.RingTheory.Ideal.Span
 import Mathlib.RingTheory.Noetherian.Defs

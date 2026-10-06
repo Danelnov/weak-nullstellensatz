@@ -1,7 +1,7 @@
-name = "weak-nullstellensatz"
+name = "ManyValuedLogic"
 version = "0.1.0"
-keywords = ["math"]
-defaultTargets = ["WeakNullstellensatz"]
+keywords = ["math", "logic", "many-valued logic", "polynomial semantics"]
+defaultTargets = ["ManyValuedLogic"]
 
 [leanOptions]
 pp.unicode.fun = true # pretty-prints `fun a ↦ b`
@@ -12,4 +12,4 @@ name = "mathlib"
 scope = "leanprover-community"
 
 [[lean_lib]]
-name = "WeakNullstellensatz"
+name = "ManyValuedLogic"

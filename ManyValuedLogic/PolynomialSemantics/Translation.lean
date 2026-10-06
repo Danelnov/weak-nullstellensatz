@@ -1,7 +1,5 @@
-import WeakNullstellensatz.Finitesatz
-import WeakNullstellensatz.ManyValuedLogic
-import Mathlib.RingTheory.Nullstellensatz
 import Mathlib.Algebra.MvPolynomial.Monad
+import ManyValuedLogic.Matrix.Defs
 
 open MvPolynomial
 
@@ -14,29 +12,31 @@ theorem eval_bind₁ {R σ τ : Type*} [CommSemiring R] (x : τ → R)
 
 end MvPolynomial
 
-variable {Op Truth Atom K : Type*} [Signature Op] [Field K]
+namespace ManyValuedLogic
 
-structure SymbolTraslation (e : Truth ↪ K) (M : LogicalMatrix Op Truth) where
-  translator : (o : Op) → MvPolynomial (Fin $ Signature.arity o) K
-  eval_translator : ∀ (o : Op) (xs : Fin (Signature.arity o) → Truth),
+variable {Truth Atom K : Type*} {S : Signature} [Field K]
+
+structure SymbolTraslation (e : Truth ↪ K) (M : LogicalMatrix S Truth) where
+  translator : (o : S) → MvPolynomial (Fin o.arity) K
+  eval_translator : ∀ (o : S) (xs : Fin o.arity → Truth),
     eval (fun i => e (xs i)) (translator o) = e (M.interp o xs)
 
 namespace SymbolTraslation
 
-variable {e : Truth ↪ K} {M : LogicalMatrix Op Truth}
+variable {e : Truth ↪ K} {M : LogicalMatrix S Truth}
 
 instance : CoeFun (SymbolTraslation e M)
-    (fun _ => (o : Op) → MvPolynomial (Fin $ Signature.arity o) K) :=
+    (fun _ => (o : S) → MvPolynomial (Fin o.arity) K) :=
   ⟨SymbolTraslation.translator⟩
 
 attribute [coe] SymbolTraslation.translator
 
 noncomputable def translate (T : SymbolTraslation e M) :
-    Formula Atom Op → MvPolynomial Atom K
+    Formula S Atom → MvPolynomial Atom K
   | .var a => X a
   |.oper o args => bind₁ (fun i => T.translate (args i)) (T o)
 
-theorem eval_translate (v : Atom → Truth) (φ : Formula Atom Op) (T : SymbolTraslation e M) :
+theorem eval_translate (v : Atom → Truth) (φ : Formula S Atom) (T : SymbolTraslation e M) :
     eval (fun a => e (v a)) (T.translate φ) = e (M.eval v φ) := by
   induction φ with
   | var a =>
@@ -46,3 +46,6 @@ theorem eval_translate (v : Atom → Truth) (φ : Formula Atom Op) (T : SymbolTr
     exact T.eval_translator o _
 
 end SymbolTraslation
+
+
+end ManyValuedLogic
