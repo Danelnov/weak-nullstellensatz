@@ -9,7 +9,7 @@ open MvPolynomial
 open Classical
 
 
-variable {K σ : Type*} [Field K]  [Fintype σ]
+variable {K σ : Type*} [Field K] [Fintype σ]
 variable (A : σ → Finset K) (I : Ideal (MvPolynomial σ K))
 
 /--

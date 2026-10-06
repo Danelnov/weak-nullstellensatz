@@ -1,5 +1,3 @@
 -- This module serves as the root of the `WeakNullstellensatz` library.
 -- Import modules here that should be built as part of the library.
 import WeakNullstellensatz.Finitesatz
-import WeakNullstellensatz.ManyValuedLogic
-import WeakNullstellensatz.PolynomialSemantics
