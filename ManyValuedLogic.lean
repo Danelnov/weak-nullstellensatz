@@ -6,3 +6,6 @@ import ManyValuedLogic.Logic
 import ManyValuedLogic.Matrix.Consequence
 import ManyValuedLogic.Matrix.Defs
 import ManyValuedLogic.PolynomialSemantics.Translation
+import ManyValuedLogic.PolynomialSemantics.Characterization
+import ManyValuedLogic.PolynomialSemantics.Consequence
+import ManyValuedLogic.Algebra.Finitesatz

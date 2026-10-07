@@ -16,27 +16,27 @@ namespace ManyValuedLogic
 
 variable {Truth Atom K : Type*} {S : Signature} [Field K]
 
-structure SymbolTraslation (e : Truth ↪ K) (M : LogicalMatrix S Truth) where
+structure SymbolTranslation (e : Truth ↪ K) (M : LogicalMatrix S Truth) where
   translator : (o : S) → MvPolynomial (Fin o.arity) K
   eval_translator : ∀ (o : S) (xs : Fin o.arity → Truth),
     eval (fun i => e (xs i)) (translator o) = e (M.interp o xs)
 
-namespace SymbolTraslation
+namespace SymbolTranslation
 
 variable {e : Truth ↪ K} {M : LogicalMatrix S Truth}
 
-instance : CoeFun (SymbolTraslation e M)
+instance : CoeFun (SymbolTranslation e M)
     (fun _ => (o : S) → MvPolynomial (Fin o.arity) K) :=
-  ⟨SymbolTraslation.translator⟩
+  ⟨SymbolTranslation.translator⟩
 
-attribute [coe] SymbolTraslation.translator
+attribute [coe] SymbolTranslation.translator
 
-noncomputable def translate (T : SymbolTraslation e M) :
+noncomputable def translate (T : SymbolTranslation e M) :
     Formula S Atom → MvPolynomial Atom K
   | .var a => X a
   |.oper o args => bind₁ (fun i => T.translate (args i)) (T o)
 
-theorem eval_translate (v : Atom → Truth) (φ : Formula S Atom) (T : SymbolTraslation e M) :
+theorem eval_translate (v : Atom → Truth) (φ : Formula S Atom) (T : SymbolTranslation e M) :
     eval (fun a => e (v a)) (T.translate φ) = e (M.eval v φ) := by
   induction φ with
   | var a =>
@@ -45,6 +45,6 @@ theorem eval_translate (v : Atom → Truth) (φ : Formula S Atom) (T : SymbolTra
     simp only [translate, LogicalMatrix.eval, eval_bind₁, ih]
     exact T.eval_translator o _
 
-end SymbolTraslation
+end SymbolTranslation
 
 end ManyValuedLogic
