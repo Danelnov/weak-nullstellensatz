@@ -1,5 +1,5 @@
 import ManyValuedLogic.Algebra.Finitesatz
-import ManyValuedLogic.PolynomialSemantics.Translation
+import ManyValuedLogic.Logic
 
 open MvPolynomial
 
@@ -50,5 +50,31 @@ theorem polyConsequence_iff_mem_span_add :
     rw [vanishingIdeal_zeroLocus_eq_ideal_sum]
 
 end FinConsequence
+
+variable (A : Set K) {P Q : Set (MvPolynomial σ K)} {f g : MvPolynomial σ K}
+
+private theorem consequence_of_mem (h : f ∈ P) : polyConsequence A P f := by
+  intro x hx hp
+  exact hp f h
+
+private theorem consequence_mono (h : polyConsequence A P f) (h1 : P ⊆ Q) :
+    polyConsequence A Q f := by
+  intro x hx hq
+  apply h x hx
+  intro p hp
+  exact hq p (Set.mem_of_subset_of_mem h1 hp)
+
+private theorem consequence_cut
+    (hQP : ∀ q ∈ Q, polyConsequence A P q) (hf : polyConsequence A Q f) :
+    polyConsequence A P f := by
+  intro x hx hp
+  apply hf x hx
+  intro q hq
+  exact hQP q hq x hx hp
+
+instance (A : Set K) : PropositionalLogic (polyConsequence (σ := σ) A) where
+  refl := consequence_of_mem A
+  mono := consequence_mono A
+  cut := consequence_cut A
 
 end ManyValuedLogic
