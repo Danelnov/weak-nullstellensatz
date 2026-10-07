@@ -47,5 +47,4 @@ theorem eval_translate (v : Atom → Truth) (φ : Formula S Atom) (T : SymbolTra
 
 end SymbolTraslation
 
-
 end ManyValuedLogic

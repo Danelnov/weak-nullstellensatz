@@ -1,6 +1,8 @@
 import Mathlib.Data.Set.Basic
 import ManyValuedLogic.Matrix.Defs
 import ManyValuedLogic.Logic
+import Mathlib.Data.Finset.Basic
+import Mathlib.Data.Fintype.Basic
 
 namespace ManyValuedLogic
 
@@ -13,7 +15,7 @@ variable (Γ φ) in
 def consequence : Prop :=
   ∀ v : Atom → Truth, M.eval v '' Γ ⊆ M.designated → M.eval v φ ∈ M.designated
 
-def consequence_of_mem  (h : φ ∈ Γ) : M.consequence Γ φ :=
+private theorem consequence_of_mem  (h : φ ∈ Γ) : M.consequence Γ φ :=
   fun _ hv => hv (Set.mem_image_of_mem _ h)
 
 private theorem consequence_mono (h : M.consequence Γ φ) (h1 : Γ ⊆ Δ) : M.consequence Δ φ :=
